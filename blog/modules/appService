@@ -1,1 +1,29 @@
 
+param staticSites_blog_name string = 'blog'
+
+resource staticSites_blog_name_resource 'Microsoft.Web/staticSites@2024-04-01' = {
+  name: staticSites_blog_name
+  location: 'West Europe'
+  sku: {
+    name: 'Standard'
+    tier: 'Standard'
+  }
+  properties: {
+    repositoryUrl: 'https://github.com/Zamsar/${staticSites_blog_name}'
+    branch: 'main'
+    stagingEnvironmentPolicy: 'Enabled'
+    allowConfigFileUpdates: true
+    provider: 'GitHub'
+    enterpriseGradeCdnStatus: 'Disabled'
+  }
+}
+
+resource staticSites_blog_name_default 'Microsoft.Web/staticSites/basicAuth@2024-04-01' = {
+  parent: staticSites_blog_name_resource
+  name: 'default'
+  location: 'West Europe'
+  properties: {
+    applicableEnvironmentsMode: 'SpecifiedEnvironments'
+  }
+}
+
